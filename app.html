@@ -1,0 +1,357 @@
+
+
+<html ng-app="myapp">
+<head>
+  <title>My App</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="main.css">
+ <script  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/ngstorage/0.3.6/ngStorage.min.js"></script>
+   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <!-- UI-Router -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.min.js"></script>
+  <!--<script src="storage.js"></script>-->
+  <style>
+  .outer{
+  	
+  	background-color: #5dade2;
+  	height:570px;
+  	width:50%;
+  	margin-left:300px;
+  	margin-top:100px;
+  	border:2px solid #21618c;
+
+  }
+  .header{
+  	background-color: #2e86c1;
+ font-family: sans-serif;
+    font-size: 32px;
+  	height:50px;
+  	width:100%;
+  	text-align:center;
+
+  }
+  .working{
+  	align-self: center;
+    margin-left: 271px;
+
+    margin-top: 150px;
+
+  }
+  .login{
+  		width: 120px;
+  		height:50px;
+      font-family: sans-serif;
+  }
+  .registration{
+  	width: 120px;
+  		height:50px;
+  		margin-top:30px;
+      font-family: sans-serif;
+
+  }
+  .login-pass
+  {
+    margin-left:200px;
+    margin-top:50px;
+  }
+  </style>
+</head>
+<body>
+	<div class="outer">
+					<div class="header">Angularjs Test </div>
+		<ng-view></ng-view>
+	
+	</div>
+	<script>
+	var app = angular.module('myapp',['myapp.controllers','ngStorage','ngRoute']);
+	angular.module('myapp.controllers',[]);
+
+app.config(function($locationProvider,$routeProvider){
+	$routeProvider.when('/index',{
+		controller:'cont1',
+		templateUrl:'folder/index.html'
+	})
+	.when('/login',{
+		controller:'cont2',
+		templateUrl:'folder/login.html'
+	})
+	.when('/reg',{
+		controller:'cont3',
+		templateUrl:'folder/reg.html'
+	}).when('/select',{
+				controller:'select',
+				templateUrl:'folder/select.html'
+	}).when('/beg',{
+				controller:'beg',
+				templateUrl:'folder/beg.html'
+	}).when('/int',{
+				controller:'int',
+				templateUrl:'folder/int.html'
+	}).when('/game',{
+		controller:'game',
+		templateUrl:'folder/game.html'
+	}).otherwise({redirectTo:'/index'});
+	
+});
+app.controller('cont1',function($localStorage,$scope,$window,$location){
+console.log($scope.username);
+	$scope.loginCheck= function(){
+
+	$scope.$on("update_controller", function(event, username,password){
+			$scope.username = username;
+			$scope.password = password;
+		});
+	if( $localStorage.username == $scope.username && $localStorage.password == $scope.password){
+	
+	console.log($localStorage.username+ ' '+$scope.username);
+	$location.url('/select');}
+	else{
+
+	console.log($localStorage.username+ ' '+$scope.username);
+	$window.alert('Authentication Error');
+	}
+	};
+}).controller('cont3',function($scope,$localStorage, $window){
+	
+	  $scope.Save = function () {
+                $localStorage.username = $scope.username;
+                $localStorage.password = $scope.password;
+				$scope.$emit('update_controller', $scope.username,$scope.password);
+				 $window.alert($localStorage.username + "\n" + $localStorage.password);
+            }
+	$scope.Get = function () {
+                $window.alert($localStorage.username + "\n" + $localStorage.password);
+            }
+}).controller('select',function($scope,$localStorage, $window){
+
+
+		})
+
+
+
+
+
+.controller('game',function($scope,$window,$location,$interval){
+	$scope.typingData=["Around","those","book","list","group","like","but","here","came","number","start","read","get","he","before","on","where","few","year","Here","as","say","mean","come","under","close","bar","Back","girl","our","two","each","America","with","move","didnot","it","picture","paper","home","throught","hundred","example","mountain","finance","revolution","deficit","part","mother","sky","rocket"];    // statically input data it's color should be changed after matching with user input	$scope.time=0;
+	$scope.tempData = [];
+	$scope.errorData = [];
+	$scope.time=0;
+		$scope.timer = function () {
+			$scope.time++;
+
+
+			$scope.speed = Math.floor($scope.word / $scope.time * 60);
+
+
+			if ($scope.time == 60) {
+
+
+				if (confirm('Time Over \n Your speed is: '+ $scope.speed+' wpm')) {
+					window.location.reload();
+					$scope.time = 0;
+
+					$scope.speed = '';
+					$scope.getText = '';
+
+				}
+				else {
+					window.location.reload();
+				}
+			}
+		};
+
+		$interval(function () {
+			$scope.timer();
+		}, 1000);
+
+
+		$scope.error = 0;
+		$scope.results = []
+		$scope.check = function ($event) {
+			var keyCode = $event.keyCode;
+			if (keyCode == 32) {
+
+
+				var res = $scope.getText.split(" ");
+
+				$scope.word = res.length;
+
+				for (var i = $scope.count; i < res.length; i++) {
+					$scope.results.push(false);
+					console.log($scope.results);
+					if ($scope.typingData[i] == res[i]) {
+						//user input matching with static data
+						$scope.results[i] = true;
+
+					} else {
+						$scope.errorData[i] = res[i];
+						$scope.errorData;
+						$scope.error++;
+
+
+					}
+					res.shift();
+				}
+
+
+				$scope.count++;
+
+			}
+
+		};
+
+
+
+})
+	.controller('beg',function($scope,$window,$location,$interval){
+		$scope.begtypingData=["f","g","h","u","e","a","fy","i","l;","k","w","q","wa","t","y","uo","zi","gn",";","d;","lk","m","n","z","x","c","v","b","nm","gh","jf","xd","sn","uj","er","li","sr","tye","bfd","nb","ng","fk","df","ku","fj","cn","bn","jh","wt","op"];     // statically input data it's color should be changed after matching with user input
+		$scope.begtime=0;
+		$scope.begtempData = [];
+		$scope.begerrorData = [];
+
+			$scope.begtimer = function () {
+				$scope.begtime++;
+
+
+				$scope.begspeed = Math.floor($scope.begword / $scope.begtime * 60);
+
+				if ($scope.begtime == 60) {
+
+
+					if (confirm('Time Over \n Your speed is: '+ $scope.begspeed+' wpm')) {
+						window.location.reload();
+						$scope.begtime = 0;
+
+						$scope.begspeed = '';
+						$scope.beggetText = '';
+
+					}
+					else {
+						window.location.reload();
+					}
+				}
+			};
+
+			$interval(function () {
+				$scope.begtimer();
+			}, 1000);
+
+
+			$scope.begerror = 0;
+			$scope.begresults = []
+			$scope.begcheck = function ($event) {
+				var keyCode = $event.keyCode;
+				if (keyCode == 32) {
+
+
+					var begres = $scope.beggetText.split(" ");
+
+					$scope.begword = begres.length;
+
+					for (var i = $scope.begcount; i < begres.length; i++) {
+						$scope.begresults.push(false);
+						console.log($scope.begresults);
+						if ($scope.begtypingData[i] == begres[i]) {
+							//user input matching with static data
+							$scope.begresults[i] = true;
+
+						} else {
+							$scope.begerrorData[i] = begres[i];
+							$scope.begerrorData;
+							$scope.begerror++;
+
+
+						}
+						begres.shift();
+					}
+
+
+					$scope.begcount++;
+
+
+				}
+			};
+
+
+
+	})
+	.controller('int',function($scope,$window,$location,$interval){
+		$scope.inttypingData=["page","white","talk","book","follow","men","only","can","that","it","people","carry","much","kind","hear","start","begin","daily","work","and","the","lead","performance","no","place","for","him","even","most","incompetent","firm","you","could","choose","dozen","donkeys","on","they","hangling","over","a","hundred","of","pound","finance","revolution","deficit","in","your","sky","rocket"];    // statically input data it's color should be changed after matching with user input
+		$scope.inttime=0;
+		$scope.inttempData = [];
+		$scope.interrorData = [];
+			$scope.inttimer = function () {
+				$scope.inttime++;
+
+
+				$scope.intspeed = Math.floor($scope.intword / $scope.inttime * 60);
+
+				if ($scope.inttime == 60) {
+
+
+					if (confirm('Time Over \n Your speed is: '+ $scope.intspeed +' wpm')) {
+						window.location.reload();
+						$scope.inttime = 0;
+
+						$scope.intspeed = '';
+						$scope.intgetText = '';
+
+					}
+					else {
+						window.location.reload();
+					}
+				}
+			};
+
+			$interval(function () {
+				$scope.inttimer();
+			}, 1000);
+
+
+			$scope.interror = 0;
+			$scope.intresults = []
+			$scope.intcheck = function ($event) {
+				var keyCode = $event.keyCode;
+				if (keyCode == 32) {
+
+
+					var intres = $scope.intgetText.split(" ");
+
+					$scope.intword = intres.length;
+
+					for (var i = $scope.intcount; i < intres.length; i++) {
+						$scope.intresults.push(false);
+						console.log($scope.intresults);
+						if ($scope.inttypingData[i] == intres[i]) {
+							//user input matching with static data
+							$scope.intresults[i] = true;
+
+						} else {
+							$scope.interrorData[i] = intres[i];
+							$scope.interrorData;
+							$scope.interror++;
+
+
+						}
+						intres.shift();
+					}
+
+
+					$scope.intcount++;
+
+
+				}
+			};
+
+
+
+	});
+
+	</script>
+
+</body>
+</html>
