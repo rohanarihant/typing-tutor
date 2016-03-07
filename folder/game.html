@@ -1,0 +1,20 @@
+<div>
+    <div>
+        <p id="content">
+         <span ng-repeat="x in typingData" ng-class="{'match': results[$index] == true , 'unmatch': results[$index] == false}"> &nbsp{{x}}
+         </span>
+        </p>
+
+        <div style="margin-left: 200px;">
+
+            <input type="text" ng-init="count = 0" ng-keypress="check($event)" id="inputText" ng-model="getText">
+            <span  ng-if="event.keyCode == 32">{{check()}}</span>
+
+        </div>
+    </div>
+    <div class="result">
+        <ul> Your speed is :{{speed}} <br/>number of Errors: {{error}}
+            <li ng-repeat="x in errorData">{{x}}</li></ul>
+    </div>
+    <div class="time">{{time}}</div>
+</div>
