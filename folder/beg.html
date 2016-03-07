@@ -1,0 +1,20 @@
+<div>
+    <div>
+        <p id="content">
+         <span ng-repeat="x in begtypingData" ng-class="{'match': begresults[$index] == true , 'unmatch': begresults[$index] == false}"> &nbsp{{x}}
+         </span>
+        </p>
+
+        <div style="margin-left: 200px;">
+
+            <input type="text" ng-init="begcount = 0" ng-keypress="begcheck($event)" id="inputText" ng-model="beggetText">
+            <span  ng-if="event.keyCode == 32">{{check()}}</span>
+
+        </div>
+    </div>
+    <div class="result">
+        <ul> Your speed is :{{begspeed}} <br/>number of Errors: {{begerror}}
+            <li ng-repeat="x in begerrorData">{{x}}</li></ul>
+    </div>
+    <div class="time">{{begtime}}</div>
+</div>
